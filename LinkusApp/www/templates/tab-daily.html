@@ -1,12 +1,52 @@
 <ion-view view-title="Dashboard">
   <ion-content class="padding">
+    <ion-list>
     <div class="list card">
-      <div class="item item-divider">Recent Updates</div>
-      <div class="item item-body">
+      <div class="item item-divider"><b>Don't Forget your Post Lab </b> <div class="align-right">5:00 - 10:00</div></div>
+      <div class="item item-body" style="height: 125px;">
         <div>
-          There is a fire in <b>sector 3</b>
+          Don't forget your postlab due on friday dddddddddddddddddddddddddddddddddddddddd
         </div>
       </div>
+        <div class="item tabs tabs-secondary tabs-icon-left">
+          <a class="tab-item" href="#">
+            <i class="icon ion-thumbsup"></i>
+            Pin
+          </a>
+          <a class="tab-item" href="#">
+            <i class="icon ion-share"></i>
+            Hide
+          </a>
+        </div>
     </div>
+
+    <div class="list card">
+      <div class="item item-divider"><b>Don't Forget your Post Lab </b> <div class="align-right">5:00 - 10:00</div></div>
+      <div class="item item-body" style="height: 125px;">
+        <div>
+          Don't forget your postlab due on friday dddddddddddddddddddddddddddddddddddddddd
+        </div>
+      </div>
+        <div class="item tabs tabs-secondary tabs-icon-left">
+          <a class="tab-item" href="#">
+            <i class="icon ion-thumbsup"></i>
+            Pin
+          </a>
+          <a class="tab-item" href="#">
+            <i class="icon ion-share"></i>
+            Hide
+          </a>
+        </div>
+    </div>
+
+    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
+      <img ng-src="{{chat.face}}">
+      <h2>{{chat.name}}</h2>
+      <p>{{chat.lastText}}</p>
+      <i class="icon ion-chevron-right icon-accessory"></i>
+    </ion-item>
+
+
+  </ion-list>
   </ion-content>
 </ion-view>
