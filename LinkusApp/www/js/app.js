@@ -32,7 +32,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   $stateProvider
 
   // setup an abstract state for the tabs directive
-    .state('tab', {
+  .state('tab', {
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html'
@@ -45,35 +45,26 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     views: {
       'tab-daily': {
         templateUrl: 'templates/tab-daily.html',
-        controller: 'DashCtrl'
+        controller: 'DailyCtrl'
       }
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
+  .state('tab.groups', {
+      url: '/groups',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
-        }
-      }
-    })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
+        'tab-groups': {
+          templateUrl: 'templates/tab-groups.html',
+          controller: 'GroupsCtrl'
         }
       }
     })
 
-  .state('tab.account', {
-    url: '/account',
+  .state('tab.monthly', {
+    url: '/monthly',
     views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
+      'tab-monthly': {
+        templateUrl: 'templates/tab-monthly.html',
         controller: 'AccountCtrl'
       }
     }
