@@ -9,7 +9,7 @@ angular.module('starter.controllers', [])
   });
 })
 
-.controller('NavCtrl', function($scope, $ionicPopup, $http){
+.controller('NavCtrl', function($scope, $ionicPopup, $http, $state){
 
   $scope.testLog = function(){
     $scope.data = {}
@@ -41,6 +41,9 @@ angular.module('starter.controllers', [])
 
                    console.log(groupArray);
                    window.localStorage['groups.list'] = JSON.stringify(groupArray);
+                   console.log($state);
+
+                   $state.go('tab.groups', {}, {reload: true});
                  }, function(err) {
                    console.error('ERR', err);
                 });
@@ -62,10 +65,24 @@ angular.module('starter.controllers', [])
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
+  $scope.$on('$ionicView.enter', function() {
+    console.log("View enter");
+    $scope.groups = JSON.parse(window.localStorage['groups.list']);
+    $scope.groupsList = window.localStorage['groups.list'];
+    $scope.remove = function(group){
+      var arr = JSON.parse(window.localStorage['groups.list']);
+
+      var index = arr.indexOf(group);
+      window.localStorage['groups.list'] = JSON.stringify(JSON.parse(window.localStorage['groups.list']).splice(index + 1, 1));
+
+      $state.go('tab.groups', {}, {reload: true});
+    }
+  });
+
+  $scope.$on('$ionicView.leave', function() {
+    console.log("View exit");
+    $scope.groups = [];
+  });
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
