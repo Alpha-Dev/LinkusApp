@@ -1,12 +1,11 @@
 <ion-view view-title="Chats">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-icon-right" ng-repeat="group in groups" type="item-text-wrap" href="#/tab/group/{{group.id}}">
+      <ion-item class="" ng-repeat="group in groups" type="item-text-wrap" href="#/tab/group/{{group.id}}">
         <h2 class="align-right-corner group-id">{{group.groupID}}</h2>
         <h2 class="group-title">{{group.group}}</h2>
         <p>{{group.groupDescription}}</p>
         <p style="font-style: italic; font-size: 14px;">{{group.groupAuthor}}</p>
-        <i class="icon ion-chevron-right icon-accessory"></i>
 
         <ion-option-button class="button-assertive" ng-click="remove(group)">
           Delete

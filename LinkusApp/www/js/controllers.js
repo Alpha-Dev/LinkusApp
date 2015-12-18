@@ -9,7 +9,7 @@ angular.module('starter.controllers', [])
   });
 })
 
-.controller('NavCtrl', function($scope, $ionicPopup, $http, $state){
+.controller('NavCtrl', function($scope, $ionicPopup, $http, $state, $IonicStorage){
 
   $scope.testLog = function(){
     $scope.data = {}
@@ -35,15 +35,14 @@ angular.module('starter.controllers', [])
                 //rather than the group events
                 console.log("Adding group");
                 $http.get('https://goo.gl/' + $scope.data.groupID).then(function(resp) {
-                   var groupArray = JSON.parse(window.localStorage['groups.list'] || '[]');
+                   var groupArray = ($IonicStorage.getObject('groups.list') || '[]');
 
                    groupArray.push(resp.data);
 
                    console.log(groupArray);
-                   window.localStorage['groups.list'] = JSON.stringify(groupArray);
-                   console.log($state);
+                   $IonicStorage.setObject('groups.list', groupArray);
 
-                   $state.go('tab.groups', {}, {reload: true});
+                   $state.go('tab.groups', {}, {reload: false});
                  }, function(err) {
                    console.error('ERR', err);
                 });
@@ -56,7 +55,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('GroupsCtrl', function($scope, Chats) {
+.controller('GroupsCtrl', ['$scope', 'Chats' , '$IonicStorage', '$interval', '$rootScope', function($scope, Chats, $IonicStorage, $interval, $rootScope) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -64,26 +63,36 @@ angular.module('starter.controllers', [])
   //
   //$scope.$on('$ionicView.enter', function(e) {
   //});
+  $rootScope.groups = $IonicStorage.getObject('groups.list');
+  console.log($rootScope.groups);
+  $scope.remove = function(group){
+    var arr = $IonicStorage.getObject('groups.list');
+
+    var index = arr.indexOf(group);
+
+    $IonicStorage.setObject('groups.list', (arr).splice(index + 1, 1));
+
+    $scope.$watch('groups', function(newValue, oldValue) {
+      //update the DOM with newValue
+      console.log("Watch update");
+    });
+
+    //$state.go('tab.groups', {}, {reload: true});
+  }
+
+  $interval(function() {
+              console.log($rootScope.groups);
+            }, 100);
 
   $scope.$on('$ionicView.enter', function() {
     console.log("View enter");
-    $scope.groups = JSON.parse(window.localStorage['groups.list']);
-    $scope.groupsList = window.localStorage['groups.list'];
-    $scope.remove = function(group){
-      var arr = JSON.parse(window.localStorage['groups.list']);
-
-      var index = arr.indexOf(group);
-      window.localStorage['groups.list'] = JSON.stringify(JSON.parse(window.localStorage['groups.list']).splice(index + 1, 1));
-
-      $state.go('tab.groups', {}, {reload: true});
-    }
+    $scope.$apply();
   });
 
   $scope.$on('$ionicView.leave', function() {
     console.log("View exit");
-    $scope.groups = [];
   });
-})
+}])
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
@@ -93,4 +102,34 @@ angular.module('starter.controllers', [])
   $scope.settings = {
     enableFriends: true
   };
-});
+})
+
+.factory('$IonicStorage', ['$window', '$rootScope', function($window, $rootScope) {
+
+  angular.element($window).on('storage', function(event) {
+    console.log("Storage Update");
+    console.log(event);
+    if (event.key === 'groups.list') {
+      console.log("groups.list");
+    }
+  });
+
+  console.log("Creating Service $IonicStorage");
+  return {set: function(key, value) {
+      $window.localStorage[key] = value;
+    },
+    setRoot: function(scope) {
+        root = scope;
+      },
+    get: function(key, defaultValue) {
+      return $window.localStorage[key] || defaultValue;
+    },
+    setObject: function(key, value) {
+      $window.localStorage[key] = JSON.stringify(value);
+      $rootScope.groups = JSON.parse($window.localStorage[key] || '[]');
+    },
+    getObject: function(key) {
+      return JSON.parse($window.localStorage[key] || '[]');
+    }
+  }
+}]);
