@@ -55,7 +55,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('GroupsCtrl', ['$scope', 'Chats' , '$IonicStorage', '$interval', '$rootScope', function($scope, Chats, $IonicStorage, $interval, $rootScope) {
+.controller('GroupsCtrl', ['$scope', 'Chats' , '$IonicStorage', '$rootScope', function($scope, Chats, $IonicStorage, $rootScope) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -65,24 +65,54 @@ angular.module('starter.controllers', [])
   //});
   $rootScope.groups = $IonicStorage.getObject('groups.list');
   console.log($rootScope.groups);
-  $scope.remove = function(group){
+  $scope.remove = function(groupID){
+    console.log("Removing : " + groupID);
+
     var arr = $IonicStorage.getObject('groups.list');
+    console.log(arr);
+    var index;
+    //**for(index = 0; index < arr.length; index++){
+    //  console.log(arr[index].groupID);
+  //    if(arr[index].groupID === groupID){
+    //    console.log(groupID + " : " + arr[index].groupID);
+      //  break;
+    //  }
+    //  else{
+  //      continue;
+  //    }
+//    }
 
-    var index = arr.indexOf(group);
+  //  console.log(index);
 
-    $IonicStorage.setObject('groups.list', (arr).splice(index + 1, 1));
+//    if(index === arr.length){
+    //  console.log("No Index detected");
+    //  return;
+  //  }
 
-    $scope.$watch('groups', function(newValue, oldValue) {
-      //update the DOM with newValue
-      console.log("Watch update");
-    });
+
+  var filt = false;
+  $IonicStorage.setObject('groups.list', arr.filter(function(i){
+    console.log(filt);
+    if(filt == true){
+      return i;
+    }
+    if(i.groupID != groupID)
+    {
+      return i;
+    }
+    else{
+      console.log("Found filt");
+      filt = true;
+    }
+  }));
+
+  //if(arr.length == 1)
+  //  $IonicStorage.setObject('groups.list', []);
+  //else
+  //  $IonicStorage.setObject('groups.list', (arr).splice(index, arr.length));
 
     //$state.go('tab.groups', {}, {reload: true});
   }
-
-  $interval(function() {
-              console.log($rootScope.groups);
-            }, 100);
 
   $scope.$on('$ionicView.enter', function() {
     console.log("View enter");
