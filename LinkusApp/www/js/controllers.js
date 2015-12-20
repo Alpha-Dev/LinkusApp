@@ -1,12 +1,64 @@
 angular.module('starter.controllers', [])
 
-.controller('DailyCtrl', function($scope, $http) {
+.controller('DailyCtrl', function($scope, $http, $IonicStorage) {
  $http.get('https://cors-test.appspot.com/test').then(function(resp) {
     console.log('Success', resp);
     // For JSON responses, resp.data contains the result
   }, function(err) {
     console.error('ERR', err);
   });
+})
+
+.controller('MonthlyCtrl', function($scope) {
+
+})
+
+.controller('SettingsCtrl', function($scope, $http, $IonicStorage) {
+
+  console.log("Reading Settings");
+
+  $scope.settings = $IonicStorage.getObject('linkus-settings', null);
+
+  if($scope.settings === null){
+      $scope.settings = {
+        enablePush: true,
+        updateInt: 30,
+        nickname: "",
+        birthday: null
+      };
+  }
+
+  console.log($scope.settings.birthday);
+
+  if($scope.settings.birthday === null){
+    $scope.placeholderBirthday = "Set Birthday";
+  }
+  else{
+    $scope.placeholderBirthday = $scope.settings.birthday;
+  }
+
+  console.log($scope.settings);
+
+  $scope.$on('$ionicView.leave', function() {
+    console.log("Writting Settings to storage");
+    $IonicStorage.setObject('linkus-settings', $scope.settings);
+  });
+
+  $scope.datepickerObject = {
+    titleLabel: 'Set Birthday',  //Optional
+    closeLabel: 'Close',  //Optional
+    setLabel: 'Set',  //Optional
+    showTodayButton: false, //Optional
+    modalHeaderColor: 'bar-positive', //Optional
+    modalFooterColor: 'bar-positive', //Optional
+    callback: function (val) {  //Mandatory
+      $scope.settings.birthday = String(val).substring(4, 10);
+      $scope.placeholderBirthday = $scope.settings.birthday;
+      console.log("Birthday set @ " + $scope.settings.birthday);
+    },
+    dateFormat: 'MM-dd-yyyy', //Optional
+    closeOnSelect: true //Optional
+  };
 })
 
 .controller('NavCtrl', function($scope, $ionicPopup, $http, $state, $IonicStorage){
@@ -71,24 +123,6 @@ angular.module('starter.controllers', [])
     var arr = $IonicStorage.getObject('groups.list');
     console.log(arr);
     var index;
-    //**for(index = 0; index < arr.length; index++){
-    //  console.log(arr[index].groupID);
-  //    if(arr[index].groupID === groupID){
-    //    console.log(groupID + " : " + arr[index].groupID);
-      //  break;
-    //  }
-    //  else{
-  //      continue;
-  //    }
-//    }
-
-  //  console.log(index);
-
-//    if(index === arr.length){
-    //  console.log("No Index detected");
-    //  return;
-  //  }
-
 
   var filt = false;
   $IonicStorage.setObject('groups.list', arr.filter(function(i){
@@ -128,12 +162,6 @@ angular.module('starter.controllers', [])
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
-})
-
 .factory('$IonicStorage', ['$window', '$rootScope', function($window, $rootScope) {
 
   angular.element($window).on('storage', function(event) {
@@ -148,9 +176,6 @@ angular.module('starter.controllers', [])
   return {set: function(key, value) {
       $window.localStorage[key] = value;
     },
-    setRoot: function(scope) {
-        root = scope;
-      },
     get: function(key, defaultValue) {
       return $window.localStorage[key] || defaultValue;
     },
@@ -158,8 +183,11 @@ angular.module('starter.controllers', [])
       $window.localStorage[key] = JSON.stringify(value);
       $rootScope.groups = JSON.parse($window.localStorage[key] || '[]');
     },
-    getObject: function(key) {
-      return JSON.parse($window.localStorage[key] || '[]');
+    getObject: function(key, defaultValue) {
+      if(typeof $window.localStorage[key] === 'undefined'){
+        $window.localStorage[key] = [];
+      }
+      return JSON.parse($window.localStorage[key] || defaultValue);
     }
   }
 }]);
