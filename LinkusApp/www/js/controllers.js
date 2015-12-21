@@ -63,6 +63,11 @@ angular.module('starter.controllers', [])
 
 .controller('NavCtrl', function($scope, $ionicPopup, $http, $state, $IonicStorage){
 
+  if($IonicStorage.get('groups.list', null) === "undefined" || $IonicStorage.get('groups.list', null) === null){
+    console.log("Creating new first group");
+    $IonicStorage.setObject('groups.list', []);
+  }
+
   $scope.testLog = function(){
     $scope.data = {}
 
@@ -87,7 +92,7 @@ angular.module('starter.controllers', [])
                 //rather than the group events
                 console.log("Adding group");
                 $http.get('https://goo.gl/' + $scope.data.groupID).then(function(resp) {
-                   var groupArray = ($IonicStorage.getObject('groups.list') || '[]');
+                   var groupArray = ($IonicStorage.getObject('groups.list') || []);
 
                    groupArray.push(resp.data);
 
@@ -185,7 +190,9 @@ angular.module('starter.controllers', [])
     },
     getObject: function(key, defaultValue) {
       if(typeof $window.localStorage[key] === 'undefined'){
+        console.log("Generating new group");
         $window.localStorage[key] = [];
+        return $window.localStorage[key];
       }
       return JSON.parse($window.localStorage[key] || defaultValue);
     }
