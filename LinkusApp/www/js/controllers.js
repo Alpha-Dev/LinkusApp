@@ -13,9 +13,24 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SettingsCtrl', function($scope, $http, $IonicStorage) {
+.controller('SettingsCtrl', function($scope, $http, $IonicStorage, $ionicPopup) {
 
   console.log("Reading Settings");
+
+  $scope.showResetConfirm = function() {
+  var confirmPopup = $ionicPopup.confirm({
+    title: 'Consume Ice Cream',
+    template: 'Are you sure you want to eat this ice cream?'
+  });
+
+  confirmPopup.then(function(res) {
+    if(res) {
+      console.log('You are sure');
+    } else {
+      console.log('You are not sure');
+    }
+  });
+};
 
   $scope.settings = $IonicStorage.getObject('linkus-settings', null);
 
@@ -63,7 +78,7 @@ angular.module('starter.controllers', [])
 
 .controller('NavCtrl', function($scope, $ionicPopup, $http, $state, $IonicStorage){
 
-  if($IonicStorage.get('groups.list', null) === "undefined" || $IonicStorage.get('groups.list', null) === null){
+  if(typeof window.localStorage['groups.list'] === "undefined"){
     console.log("Creating new first group");
     $IonicStorage.setObject('groups.list', []);
   }
@@ -120,42 +135,48 @@ angular.module('starter.controllers', [])
   //
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-  $rootScope.groups = $IonicStorage.getObject('groups.list');
-  console.log($rootScope.groups);
+
   $scope.remove = function(groupID){
     console.log("Removing : " + groupID);
 
     var arr = $IonicStorage.getObject('groups.list');
-    console.log(arr);
-    var index;
 
-  var filt = false;
-  $IonicStorage.setObject('groups.list', arr.filter(function(i){
-    console.log(filt);
-    if(filt == true){
-      return i;
+    for(var i = 0; i < arr.length; i++){
+      if(arr[i].groupID === groupID){
+        break;
+      }
+      else if(i === arr.length - 1){
+        i = -1;
+        break;
+      }
     }
-    if(i.groupID != groupID)
-    {
-      return i;
+
+    if(i === -1){
+      console.log("Group not found");
+      return;
     }
     else{
-      console.log("Found filt");
-      filt = true;
+      //Split the array @ the middle into 2 parts
+      var tempLast = arr.splice(i + 1, arr.length);
+      console.log(tempLast);
+      var tempFirst = arr.splice(0, i);
+      console.log(tempFirst);
+      //Then append them together
+      var fin = tempFirst.concat(tempLast);
     }
-  }));
 
-  //if(arr.length == 1)
-  //  $IonicStorage.setObject('groups.list', []);
-  //else
-  //  $IonicStorage.setObject('groups.list', (arr).splice(index, arr.length));
 
-    //$state.go('tab.groups', {}, {reload: true});
+    $IonicStorage.setObject('groups.list', fin);
+
   }
+
+  //$rootScope.groups = ;
 
   $scope.$on('$ionicView.enter', function() {
     console.log("View enter");
-    $scope.$apply();
+    //$scope.$apply();
+    $rootScope.groups = $IonicStorage.getObject('groups.list');
+    //console.log("Groups root : " + $rootScope.groups.length);
   });
 
   $scope.$on('$ionicView.leave', function() {
@@ -181,20 +202,15 @@ angular.module('starter.controllers', [])
   return {set: function(key, value) {
       $window.localStorage[key] = value;
     },
-    get: function(key, defaultValue) {
-      return $window.localStorage[key] || defaultValue;
+    get: function(key) {
+      return $window.localStorage[key];
     },
     setObject: function(key, value) {
       $window.localStorage[key] = JSON.stringify(value);
-      $rootScope.groups = JSON.parse($window.localStorage[key] || '[]');
+      $rootScope.groups = value || [];
     },
-    getObject: function(key, defaultValue) {
-      if(typeof $window.localStorage[key] === 'undefined'){
-        console.log("Generating new group");
-        $window.localStorage[key] = [];
-        return $window.localStorage[key];
-      }
-      return JSON.parse($window.localStorage[key] || defaultValue);
+    getObject: function(key) {
+      return JSON.parse($window.localStorage[key]);
     }
   }
 }]);
