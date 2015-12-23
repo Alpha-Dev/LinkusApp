@@ -27,12 +27,9 @@
       <input type="text" placeholder="Nickname" ng-model="settings.nickname"></input>
     </label>
 
-    <div class="item">
-      Birthday
-      <ionic-datepicker input-obj="datepickerObject">
+      <ionic-datepicker input-obj="datepickerObject" class="item">
         <button class="button button-block button-positive"> {{placeholderBirthday}}</button>
       </ionic-datepicker>
-    </div>
 
     <div class="item">
       <button class="button button-assertive" ng-click="showResetConfirm()">Reset To Factory Settings</button>
@@ -41,6 +38,16 @@
     <div class="item item-divider">
       About
     </div>
+
+    <ion-item class="item" href="#/tab/chats/{{chat.id}}">
+      Changelog
+    </ion-item>
+    <ion-item class="item" href="http://alpha-dev.github.io">
+      About Alpha-Dev Studios
+    </ion-item>
+    <ion-item class="item">
+      Build : {{BuildString}}
+    </ion-item>
     </ion-list>
   </ion-content>
 </ion-view>

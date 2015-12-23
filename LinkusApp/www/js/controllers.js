@@ -13,28 +13,40 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SettingsCtrl', function($scope, $http, $IonicStorage, $ionicPopup) {
+.controller('SettingsCtrl', function($scope, $http, $IonicStorage, $ionicPopup, $state) {
+
+  $scope.BuildString = "in-dev version";
 
   console.log("Reading Settings");
 
   $scope.showResetConfirm = function() {
   var confirmPopup = $ionicPopup.confirm({
-    title: 'Consume Ice Cream',
-    template: 'Are you sure you want to eat this ice cream?'
+    title: 'Reset to Factory Settings',
+    template: 'Are you sure you want to reset everything? This will erase all groups and events.'
   });
 
   confirmPopup.then(function(res) {
     if(res) {
-      console.log('You are sure');
+      $IonicStorage.setObject('groups.list', []);
+      $IonicStorage.setObject('linkus-settings', {
+              enablePush: true,
+              updateInt: 30,
+              nickname: "",
+              birthday: null});
+      $scope.placeholderBirthday = "Set Birthday";
+      $scope.settings = $IonicStorage.getObject('linkus-settings');
+      console.log('Wiped!');
+      $state.go('tab.daily', {}, {reload: false});
     } else {
-      console.log('You are not sure');
+      console.log('The reset was canceled');
     }
   });
 };
 
-  $scope.settings = $IonicStorage.getObject('linkus-settings', null);
+  $scope.settings = $IonicStorage.getObject('linkus-settings');
+  console.log("SS: " + $scope.settings);
 
-  if($scope.settings === null){
+  if($scope.settings === null || typeof $scope.settings === "undefined"){
       $scope.settings = {
         enablePush: true,
         updateInt: 30,
@@ -43,9 +55,9 @@ angular.module('starter.controllers', [])
       };
   }
 
-  console.log($scope.settings.birthday);
+  console.log("B-Day : " + $scope.settings.birthday);
 
-  if($scope.settings.birthday === null){
+  if($scope.settings.birthday === null || typeof $scope.settings.birthday === "undefined"){
     $scope.placeholderBirthday = "Set Birthday";
   }
   else{
@@ -67,6 +79,9 @@ angular.module('starter.controllers', [])
     modalHeaderColor: 'bar-positive', //Optional
     modalFooterColor: 'bar-positive', //Optional
     callback: function (val) {  //Mandatory
+      if(typeof val === "undefined"){
+        return;
+      }
       $scope.settings.birthday = String(val).substring(4, 10);
       $scope.placeholderBirthday = $scope.settings.birthday;
       console.log("Birthday set @ " + $scope.settings.birthday);
@@ -210,7 +225,7 @@ angular.module('starter.controllers', [])
       $rootScope.groups = value || [];
     },
     getObject: function(key) {
-      return JSON.parse($window.localStorage[key]);
+      return JSON.parse($window.localStorage[key] || null);
     }
   }
 }]);
