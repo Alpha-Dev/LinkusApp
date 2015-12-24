@@ -13,7 +13,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SettingsCtrl', function($scope, $http, $IonicStorage, $ionicPopup, $state) {
+.controller('SettingsCtrl', function($scope, $http, $IonicStorage, $ionicPopup, $state, $window) {
 
   $scope.BuildString = "in-dev version";
 
@@ -68,7 +68,7 @@ angular.module('starter.controllers', [])
 
   $scope.$on('$ionicView.leave', function() {
     console.log("Writting Settings to storage");
-    $IonicStorage.setObject('linkus-settings', $scope.settings);
+    window.localStorage['linkus-settings'] = $scope.settings;
   });
 
   $scope.datepickerObject = {
@@ -191,6 +191,7 @@ angular.module('starter.controllers', [])
     console.log("View enter");
     //$scope.$apply();
     $rootScope.groups = $IonicStorage.getObject('groups.list');
+    console.log("gList : " + $rootScope.groups);
     //console.log("Groups root : " + $rootScope.groups.length);
   });
 
@@ -204,14 +205,6 @@ angular.module('starter.controllers', [])
 })
 
 .factory('$IonicStorage', ['$window', '$rootScope', function($window, $rootScope) {
-
-  angular.element($window).on('storage', function(event) {
-    console.log("Storage Update");
-    console.log(event);
-    if (event.key === 'groups.list') {
-      console.log("groups.list");
-    }
-  });
 
   console.log("Creating Service $IonicStorage");
   return {set: function(key, value) {

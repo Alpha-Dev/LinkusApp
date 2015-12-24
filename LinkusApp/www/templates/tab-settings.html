@@ -1,7 +1,7 @@
-<ion-view view-title="Account">
+<ion-view view-title="Settings">
   <ion-content>
     <div class="item item-divider">
-      Push Notifications
+      <b>Push Notifications</b>
     </div>
     <ion-toggle  ng-model="settings.enablePush">
         Enable Push Notifications
@@ -20,33 +20,40 @@
     </div>
 
     <div class="item item-divider">
-      Customization
+      <b>Customization</b>
     </div>
 
     <label class="item item-input">
       <input type="text" placeholder="Nickname" ng-model="settings.nickname"></input>
     </label>
 
-      <ionic-datepicker input-obj="datepickerObject" class="item">
-        <button class="button button-block button-positive"> {{placeholderBirthday}}</button>
+      <ionic-datepicker input-obj="datepickerObject" class="item reduce-pad">
+        <button class="button button-block button-positive" style="margin: 0px;"> {{placeholderBirthday}}</button>
       </ionic-datepicker>
 
-    <div class="item">
-      <button class="button button-assertive" ng-click="showResetConfirm()">Reset To Factory Settings</button>
+    <div class="item reduce-pad">
+      <button class="button button-assertive" ng-click="showResetConfirm()" style="margin: 0px;">Reset To Factory Settings</button>
     </div>
 
     <div class="item item-divider">
-      About
+      <b>About</b>
     </div>
 
     <ion-item class="item" href="#/tab/chats/{{chat.id}}">
-      Changelog
+      <h>Recent Changelog</h>
+      <p>Version {{BuildString}}</p>
     </ion-item>
     <ion-item class="item" href="http://alpha-dev.github.io">
-      About Alpha-Dev Studios
+      <h>About Alpha-Dev Studios</h>
+      <p>The team behind the Linkus & many others</p>
     </ion-item>
-    <ion-item class="item">
-      Build : {{BuildString}}
+    <ion-item class="item" href="http://alpha-dev.github.io">
+      <h>Support Us</h>
+      <p>Help us out, maybe even buy us some lunch!</p>
+    </ion-item>
+    <ion-item class="item" href="http://alpha-dev.github.io">
+      <h>Credits</h>
+      <p>Individuals in the Linkus team</p>
     </ion-item>
     </ion-list>
   </ion-content>

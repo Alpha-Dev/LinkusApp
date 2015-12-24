@@ -17,6 +17,15 @@
   top: 55px !important;
 }
 
+.reduce-pad{
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.reduce-pad-all{
+  padding: 2px;
+}
+
 .platform-android .scroll-content{
   top: 102px !important;
 }
