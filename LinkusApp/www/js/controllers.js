@@ -2,8 +2,95 @@ angular.module('starter.controllers', [])
 
 .controller('DailyCtrl', function($scope, $http, $IonicStorage) {
  $http.get('https://cors-test.appspot.com/test').then(function(resp) {
+
     console.log('Success', resp);
     // For JSON responses, resp.data contains the result
+
+    date = new Date();
+    actual_data = [];
+    document.getElementById('date_picker').value = date.getFullYear() + "-"+(date.getMonth()+1)+"-"+date.getDate();
+    //$scope.Date_picker = date;
+
+    actual_data[2015] = []
+    actual_data[2015][11] = []
+    actual_data[2015][11][15] = {
+      events: [{
+        name: "School Thing 1",
+        desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu lorem tortor. Vestibulum ac nisl nisi. Aenean dignissim sit amet nunc eget congue. Aliquam ac neque ornare, aliquam enim nec, hendrerit tortor. Suspendisse ex dui, dapibus a orci sit amet, ultricies ultrices ex. In ultricies est quis dui consequat, a eleifend ex faucibus. Fusce eget ipsum non leo interdum sagittis et vel urna. Suspendisse viverra sapien vitae porttitor euismod. Nullam a enim elit. Proin maximus posuere maximus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam sit amet elit mi. Suspendisse potenti. Curabitur nec lacus sem.",
+        time_start: 1412,
+        time_end: 1432
+      }, {
+        name: "School Thing 2",
+        desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu lorem tortor. Vestibulum ac nisl nisi. Aenean dignissim sit amet nunc eget congue. Aliquam ac neque ornare, aliquam enim nec, hendrerit tortor. Suspendisse ex dui, dapibus a orci sit amet, ultricies ultrices ex. In ultricies est quis dui consequat, a eleifend ex faucibus. Fusce eget ipsum non leo interdum sagittis et vel urna. Suspendisse viverra sapien vitae porttitor euismod. Nullam a enim elit. Proin maximus posuere maximus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam sit amet elit mi. Suspendisse potenti. Curabitur nec lacus sem.",
+        time_start: 1435,
+        time_end: 1455
+      }, {
+        name: "School Thing 3",
+        desc: "Eat the ooo33o",
+        time_start: 1515,
+        time_end: 1652
+      }]
+    }
+    actual_data[2015][11][24] = {
+      events: [{
+        name: "School Thing 1",
+        desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu lorem tortor. Vestibulum ac nisl nisi. Aenean dignissim sit amet nunc eget congue. Aliquam ac neque ornare, aliquam enim nec, hendrerit tortor. Suspendisse ex dui, dapibus a orci sit amet, ultricies ultrices ex. In ultricies est quis dui consequat, a eleifend ex faucibus. Fusce eget ipsum non leo interdum sagittis et vel urna. Suspendisse viverra sapien vitae porttitor euismod. Nullam a enim elit. Proin maximus posuere maximus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam sit amet elit mi. Suspendisse potenti. Curabitur nec lacus sem.",
+        time_start: 1412,
+        time_end: 1432
+      }, {
+        name: "School Thing 2",
+        desc: "Eat the ooo33o",
+        time_start: 1430,
+        time_end: 1545
+      }]
+    }
+    $scope.date_picker = undefined;
+    console.log(document.getElementById('date_picker').value)
+    $scope.day_changed = function(){
+      console.log(document.getElementById('date_picker').value)
+      var d = new Date("2015-12-25")
+      console.log(d + " " + "2015-12-25")
+      day_to_render = new Date(document.getElementById('date_picker').value);
+      GenerateDataToRender(day_to_render)
+    }
+    GenerateDataToRender = function(date){
+      console.log(date.getDate())
+      if(actual_data[date.getFullYear()][date.getMonth()][date.getDate()+1] != undefined)
+        $scope.working_data = actual_data[date.getFullYear()][date.getMonth()][date.getDate()+1]
+      else
+        $scope.working_data = undefined;
+    }
+    IdentifyConflicts = function (data) {
+      for (var a = 0; a < data.length; a++) {
+        if (data[a] != undefined) {
+          data[a].conflicts = 0;
+          for (var b = 0; b < data[a].events.length; b++) {
+            var check_start = data[a].events[b].time_start;
+            var check_end = data[a].events[b].time_end;
+            for (var q = 1; q < data[a].events.length; q++) {
+              var compare_start = data[a].events[q].time_start;
+              var compare_end = data[a].events[q].time_end;
+              if ((check_start < compare_start && compare_start < check_end) || (check_start < compare_end && compare_end < check_end)) {
+                data[a].events[b].conflict = q;
+                data[a].events[q].conflict = b;
+                data[a].conflicts++;
+              }
+            }
+          }
+        }
+      }
+    }
+    for(var a = 0;a<actual_data.length;a++){
+      if(actual_data[a]!=undefined){
+        for(var b = 0;b<actual_data[a].length;b++){
+          if(actual_data[a][b]!=undefined){
+            IdentifyConflicts(actual_data[a][b])
+          }
+        }
+      }
+    }
+    //$scope.working_data = actual_data[$scope.Date_picker.getFullYear()][$scope.Date_picker.getMonth()][$scope.Date_picker.getDate()];
+    console.log($scope.working_data)
   }, function(err) {
     console.error('ERR', err);
   });

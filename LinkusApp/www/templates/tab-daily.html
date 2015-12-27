@@ -1,43 +1,35 @@
+<style>
+  .conflict{
+      background-color: #EC6D6D;
+  }
+</style>
 <ion-view view-title="Daily View">
   <ion-content class="padding">
+    <label class="item item-input">
+      <span class="input-label">Date {{date_picker}}</span>
+      <input type="date" id="date_picker" ng-model="date_picker" ng-change="day_changed()">
+    </label>
     <ion-list>
-    <div class="list card">
-      <div class="item item-divider"><b>Don't Forget your Post Lab </b> <div class="align-right">5:00 - 10:00</div></div>
-      <div class="item item-body" style="height: 125px;">
-        <div>
-          Don't forget your postlab due on friday dddddddddddddddddddddddddddddddddddddddd
+      <p style="text-align:center;font-size:3em;padding-top:10px" ng-show="working_data == undefined">No Events!</p>
+      <div class="list card" ng-repeat="x in working_data.events track by $index" >
+        <div class="item item-divider" ng-class="{{x.conflict > -1 ? conflict : ''}}"><b>{{x.name}}</b> <div class="align-right">{{((x.time_start - (x.time_start%100))/100)>12 ? ((x.time_start - (x.time_start%100))/100)-12 : ((x.time_end - (x.time_end%100))/100)}}:{{x.time_start%100}} {{time_start>1200 ? "Am":"Pm" }} - {{((x.time_end - (x.time_end%100))/100)>12 ? ((x.time_end - (x.time_end%100))/100)-12 : ((x.time_end - (x.time_end%100))/100)}}:{{x.time_end%100}} {{time_end>1200 ? "Am":"Pm" }}</div></div>
+        <div class="item item-body" style="height: 125px;">
+          <div>
+            {{x.desc}} 
+          </div>
         </div>
+          <div class="item tabs tabs-secondary tabs-icon-left">
+            <a class="tab-item" href="#">
+              <i class="icon ion-thumbsup"></i>
+              Pin
+            </a>
+            <a class="tab-item" href="#">
+              <i class="icon ion-share"></i>
+              Hide
+            </a>
+          </div>
       </div>
-        <div class="item tabs tabs-secondary tabs-icon-left">
-          <a class="tab-item" href="#">
-            <i class="icon ion-thumbsup"></i>
-            Pin
-          </a>
-          <a class="tab-item" href="#">
-            <i class="icon ion-share"></i>
-            Hide
-          </a>
-        </div>
-    </div>
 
-    <div class="list card">
-      <div class="item item-divider"><b>Don't Forget your Post Lab </b> <div class="align-right">5:00 - 10:00</div></div>
-      <div class="item item-body" style="height: 125px;">
-        <div>
-          Don't forget your postlab due on friday dddddddddddddddddddddddddddddddddddddddd
-        </div>
-      </div>
-        <div class="item tabs tabs-secondary tabs-icon-left">
-          <a class="tab-item" href="#">
-            <i class="icon ion-thumbsup"></i>
-            Pin
-          </a>
-          <a class="tab-item" href="#">
-            <i class="icon ion-share"></i>
-            Hide
-          </a>
-        </div>
-    </div>
 
     <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
       <img ng-src="{{chat.face}}">
