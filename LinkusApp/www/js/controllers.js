@@ -155,7 +155,7 @@ angular.module('starter.controllers', [])
 
   $scope.$on('$ionicView.leave', function() {
     console.log("Writting Settings to storage");
-    window.localStorage['linkus-settings'] = $scope.settings;
+    window.localStorage['linkus-settings'] = JSON.stringify($scope.settings);
   });
 
   $scope.datepickerObject = {
