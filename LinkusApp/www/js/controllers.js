@@ -44,21 +44,35 @@ angular.module('starter.controllers', [])
         time_end: 1545
       }]
     }
-    $scope.date_picker = undefined;
-    console.log(document.getElementById('date_picker').value)
+    $IonicStorage.setObject("event_data",actual_data);
+    console.log($IonicStorage.getObject("event_data"))
     $scope.day_changed = function(){
-      console.log(document.getElementById('date_picker').value)
-      var d = new Date("2015-12-25")
-      console.log(d + " " + "2015-12-25")
       day_to_render = new Date(document.getElementById('date_picker').value);
       GenerateDataToRender(day_to_render)
     }
+    $scope.hide_event = function(index){
+      console.log(index)
+      date_value = new Date(document.getElementById('date_picker').value);
+      actual_data[date_value.getFullYear()][date_value.getMonth()][date_value.getDate()].events[index].hide = true;
+    }
+    //Both month and date are 0-based, 0 being the start of the month/1st month
     GenerateDataToRender = function(date){
-      console.log(date.getDate())
-      if(actual_data[date.getFullYear()][date.getMonth()][date.getDate()+1] != undefined)
-        $scope.working_data = actual_data[date.getFullYear()][date.getMonth()][date.getDate()+1]
-      else
+      if(actual_data[date.getFullYear()] != undefined){
+        if(actual_data[date.getFullYear()][date.getMonth()] != undefined){
+          if(actual_data[date.getFullYear()][date.getMonth()][date.getDate()] != undefined){
+            $scope.working_data = actual_data[date.getFullYear()][date.getMonth()][date.getDate()]
+          }
+          else{
+            $scope.working_data = undefined;
+          }
+        }
+        else{
+          $scope.working_data = undefined;
+        }
+      }
+      else{
         $scope.working_data = undefined;
+      }
     }
     IdentifyConflicts = function (data) {
       for (var a = 0; a < data.length; a++) {
@@ -90,7 +104,6 @@ angular.module('starter.controllers', [])
       }
     }
     //$scope.working_data = actual_data[$scope.Date_picker.getFullYear()][$scope.Date_picker.getMonth()][$scope.Date_picker.getDate()];
-    console.log($scope.working_data)
   }, function(err) {
     console.error('ERR', err);
   });
