@@ -31,7 +31,12 @@
       The nav bar that will be updated as we navigate between views.
     -->
     <ion-nav-bar class="bar-stable mynavbar">
-      <ion-nav-buttons side="primary">
+
+      <ion-nav-back-button class="button-clear">
+        <i class="ion-arrow-left-c"></i> Back
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="secondary">
         <button class="button" ng-click="testLog()">
           <i class="icon ion-plus-round"></i>
         </button>

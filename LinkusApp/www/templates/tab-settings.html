@@ -39,11 +39,12 @@
       <b>About</b>
     </div>
 
-    <ion-item class="item" href="#/tab/chats/{{chat.id}}">
+    <ion-item class="item" href="#/changeLog">
+      <ion-nav-view></ion-nav-view>
       <h>Recent Changelog</h>
       <p>Version {{BuildString}}</p>
     </ion-item>
-    <ion-item class="item" href="http://alpha-dev.github.io">
+    <ion-item class="item" href="#" onclick="window.open('http://alpha-dev.github.io', '_system', 'location=yes'); return false;">
       <h>About Alpha-Dev Studios</h>
       <p>The team behind the Linkus & many others</p>
     </ion-item>

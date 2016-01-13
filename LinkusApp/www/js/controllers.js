@@ -113,7 +113,19 @@ angular.module('starter.controllers', [])
 
 })
 
+.controller('ChangeLog', function($scope) {
+  console.log("Enter changelog");
+  $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+    console.log(viewData);
+    viewData.enableBack = true;
+  });
+})
+
 .controller('SettingsCtrl', function($scope, $http, $IonicStorage, $ionicPopup, $state, $window) {
+
+  $scope.gotochangelog = function(){
+    $state.go("changeLog");
+  }
 
   $scope.BuildString = "in-dev version";
 
