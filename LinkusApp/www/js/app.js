@@ -45,6 +45,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         controller: 'ChangeLog'
   })
 
+  .state('donate', {
+    url: '/donate',
+        templateUrl: 'templates/tab-donate.html'
+  })
+
   .state('aboutAlpha', {
     url: '/aboutAlpha',
         templateUrl: 'templates/tab-aboutalpha.html'
