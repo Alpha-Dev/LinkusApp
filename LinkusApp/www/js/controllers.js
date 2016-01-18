@@ -113,6 +113,14 @@ angular.module('starter.controllers', [])
 
 })
 
+.controller('Credits', function($scope) {
+  console.log("Enter Credits");
+  $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+    console.log(viewData);
+    viewData.enableBack = true;
+  });
+})
+
 .controller('ChangeLog', function($scope) {
   console.log("Enter changelog");
   $scope.$on('$ionicView.beforeEnter', function (event, viewData) {

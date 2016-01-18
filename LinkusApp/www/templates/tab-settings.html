@@ -1,23 +1,6 @@
 <ion-view view-title="Settings">
   <ion-content>
-    <div class="item item-divider">
-      <b>Push Notifications</b>
-    </div>
-    <ion-toggle  ng-model="settings.enablePush">
-        Enable Push Notifications
-    </ion-toggle>
-    <div class="item range range-positive">
-      <i class="ion-email"></i>
-      <input type="range" name="updateInterval" min="5" max="60" value="30" ng-model="settings.updateInt" ng-disabled="!settings.enablePush" ng-if="settings.enablePush">
-      <input type="range" value="0"ng-if="!settings.enablePush" ng-disabled="!settings.enablePush">
-      <i class="ion-email-unread"></i>
-    </div>
-    <div class="item" ng-model="settings.updateInt" ng-if="settings.enablePush">
-      Check for updates every : {{settings.updateInt}} minutes
-    </div>
-    <div class="item" ng-model="settings" ng-if="!settings.enablePush">
-      Push Notifications Disabled
-    </div>
+    
 
     <div class="item item-divider">
       <b>Customization</b>
@@ -48,11 +31,11 @@
       <h>About Alpha-Dev Studios</h>
       <p>The team behind the Linkus & many others</p>
     </ion-item>
-    <ion-item class="item" href="#/donate">
+    <ion-item class="item" href="#" onclick="window.open('http://alpha-dev.github.io/donate.html', '_system', 'location=yes'); return false;">
       <h>Support Us</h>
       <p>Help us out, maybe even buy us some lunch!</p>
     </ion-item>
-    <ion-item class="item" href="http://alpha-dev.github.io">
+    <ion-item class="item" href="#/donate">
       <h>Credits</h>
       <p>Individuals in the Linkus team</p>
     </ion-item>

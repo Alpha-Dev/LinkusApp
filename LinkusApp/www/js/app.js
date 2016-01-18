@@ -9,6 +9,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
+    //Setup the background tasks
+    cordova.plugins.backgroundMode.setDefaults({ text:'Running group update checking task'});
+    //Enable background
+    cordova.plugins.backgroundMode.enable();
+
+
+    // Called when background mode has been activated
+cordova.plugins.backgroundMode.onactivate = function () {
+    setTimeout(function () {
+        // Modify the currently displayed notification
+        cordova.plugins.backgroundMode.configure({
+            text:'Running in background for more than 5s now.'
+        });
+    }, 5000);
+}
+
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -47,7 +63,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
   .state('donate', {
     url: '/donate',
-        templateUrl: 'templates/tab-donate.html'
+        templateUrl: 'templates/tab-donate.html',
+        controller: 'Credits'
   })
 
   .state('aboutAlpha', {
