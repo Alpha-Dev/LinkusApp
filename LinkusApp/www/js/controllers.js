@@ -8,7 +8,13 @@ angular.module('starter.controllers', [])
 
     date = new Date();
     actual_data = [];
-    document.getElementById('date_picker').value = date.getFullYear() + "-"+(date.getMonth()+1)+"-"+date.getDate();
+    var monthnum;
+    if(date.getMonth()>9)
+      monthnum = date.getMonth()+1;
+    else
+      monthnum = "0"+(date.getMonth()+1);
+    document.getElementById('date_picker').value = date.getFullYear() + "-"+(monthnum)+"-"+date.getDate();
+
     //$scope.Date_picker = date;
 
     actual_data[2015] = []
@@ -110,7 +116,134 @@ angular.module('starter.controllers', [])
 })
 
 .controller('MonthlyCtrl', function($scope) {
+  var getMonthString = function(num){
+    switch(num){
+      case 0: return "January";
+      break;
+      case 1: return "February";
+      break;
+      case 2: return "March";
+      break;
+      case 3: return "April";
+      break;
+      case 4: return "May";
+      break;
+      case 5: return "June";
+      break;
+      case 6: return "July";
+      break;
+      case 7: return "August";
+      break;
+      case 8: return "September";
+      break;
+      case 9: return "October";
+      break;
+      case 10: return "November";
+      break;
+      case 11: return "December";
+      break;
 
+    }
+  }
+  var date = new Date();
+  console.log(date);
+  $scope.month = getMonthString(date.getMonth());
+  $scope.month_data = date;
+  $scope.year = date.getFullYear();
+  $scope.working_data = undefined;
+  IdentifyConflicts = function (data) {
+    for (var a = 0; a < data.length; a++) {
+      if (data[a] != undefined) {
+        data[a].conflicts = 0;
+        for (var b = 0; b < data[a].events.length; b++) {
+          var check_start = data[a].events[b].time_start;
+          var check_end = data[a].events[b].time_end;
+          for (var q = 1; q < data[a].events.length; q++) {
+            var compare_start = data[a].events[q].time_start;
+            var compare_end = data[a].events[q].time_end;
+            if ((check_start < compare_start && compare_start < check_end) || (check_start < compare_end && compare_end < check_end)) {
+              data[a].events[b].conflict = q;
+              data[a].events[q].conflict = b;
+              data[a].conflicts++;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  $scope.month_changed = function(){
+    var d = new Date(document.getElementById("month_picker").value+"-15")
+    var month_number = d.getMonth();
+    $scope.year = date.getFullYear();
+    $scope.month = getMonthString(month_number);
+    if(actual_data[d.getFullYear()] != undefined){
+      if(actual_data[d.getFullYear()][d.getMonth()] != undefined){
+        IdentifyConflicts(actual_data[d.getFullYear()][d.getMonth()])
+        $scope.working_data = actual_data[d.getFullYear()][d.getMonth()];
+        console.log($scope.working_data)
+        for(var a = 0;a<$scope.working_data.length;a++){
+          if($scope.working_data[a] != undefined){
+            $scope.working_data[a].date = a;
+          }
+        }
+      }
+      else
+        $scope.working_data = undefined;
+    }
+    else {
+        $scope.working_data = undefined;
+    }
+  }
+  var actual_data = [];
+  actual_data[2015] = []
+  actual_data[2015][11] = []
+  actual_data[2015][11][15] = {
+    events: [{
+      name: "School Thing 1",
+      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu lorem tortor. Vestibulum ac nisl nisi. Aenean dignissim sit amet nunc eget congue. Aliquam ac neque ornare, aliquam enim nec, hendrerit tortor. Suspendisse ex dui, dapibus a orci sit amet, ultricies ultrices ex. In ultricies est quis dui consequat, a eleifend ex faucibus. Fusce eget ipsum non leo interdum sagittis et vel urna. Suspendisse viverra sapien vitae porttitor euismod. Nullam a enim elit. Proin maximus posuere maximus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam sit amet elit mi. Suspendisse potenti. Curabitur nec lacus sem.",
+      time_start: 1412,
+      time_end: 1432
+    }, {
+      name: "School Thing 2",
+      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu lorem tortor. Vestibulum ac nisl nisi. Aenean dignissim sit amet nunc eget congue. Aliquam ac neque ornare, aliquam enim nec, hendrerit tortor. Suspendisse ex dui, dapibus a orci sit amet, ultricies ultrices ex. In ultricies est quis dui consequat, a eleifend ex faucibus. Fusce eget ipsum non leo interdum sagittis et vel urna. Suspendisse viverra sapien vitae porttitor euismod. Nullam a enim elit. Proin maximus posuere maximus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam sit amet elit mi. Suspendisse potenti. Curabitur nec lacus sem.",
+      time_start: 1435,
+      time_end: 1455
+    }, {
+      name: "School Thing 3",
+      desc: "Eat the ooo33o",
+      time_start: 1515,
+      time_end: 1652
+    }]
+  }
+  actual_data[2015][11][24] = {
+    events: [{
+      name: "School Thing 1",
+      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu lorem tortor. Vestibulum ac nisl nisi. Aenean dignissim sit amet nunc eget congue. Aliquam ac neque ornare, aliquam enim nec, hendrerit tortor. Suspendisse ex dui, dapibus a orci sit amet, ultricies ultrices ex. In ultricies est quis dui consequat, a eleifend ex faucibus. Fusce eget ipsum non leo interdum sagittis et vel urna. Suspendisse viverra sapien vitae porttitor euismod. Nullam a enim elit. Proin maximus posuere maximus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam sit amet elit mi. Suspendisse potenti. Curabitur nec lacus sem.",
+      time_start: 1412,
+      time_end: 1432
+    }, {
+      name: "School Thing 2",
+      desc: "Eat the ooo33o",
+      time_start: 1430,
+      time_end: 1545
+    }]
+  }
+  for(var a = 0;a<actual_data.length;a++){
+    if(actual_data[a]!=undefined){
+      for(var b = 0;b<actual_data[a].length;b++){
+        if(actual_data[a][b]!=undefined){
+          for(var c = 0;c<actual_data[a][b];c++){
+            if(actual_data[a][b][c] != undefined){
+              actual_data[a][b][c].date = c;
+            }
+          }
+        }
+      }
+    }
+  }
+  if(actual_data[date.getFullYear()] != undefined)
+    $scope.month_working_data = actual_data[date.getFullYear()][date.getMonth()];
 })
 
 .controller('Credits', function($scope) {

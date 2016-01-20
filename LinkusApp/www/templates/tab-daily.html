@@ -10,7 +10,9 @@
       <input type="date" id="date_picker" ng-model="date_picker" ng-change="day_changed()">
     </label>
     <ion-list>
-      <p style="text-align:center;font-size:3em;padding-top:10px" ng-show="working_data == undefined">No Events!</p>
+      <div ng-show="working_data == undefined" style="display:flex;align-items:center;justify-content:center;height:80vh">
+        <p style="text-align:center;font-size:3em;padding-top:10px" >No Events today.</p>
+      </div>
       <div class="list card" ng-repeat="x in working_data.events track by $index" ng-hide="x.hide">
         <div class="item item-divider" ng-class="{conflict:x.conflict != undefined}"><b>{{x.name}}</b> <div class="align-right">{{((x.time_start - (x.time_start%100))/100)>12 ? ((x.time_start - (x.time_start%100))/100)-12 : ((x.time_end - (x.time_end%100))/100)}}:{{x.time_start%100}} {{time_start>1200 ? "Am":"Pm" }} - {{((x.time_end - (x.time_end%100))/100)>12 ? ((x.time_end - (x.time_end%100))/100)-12 : ((x.time_end - (x.time_end%100))/100)}}:{{x.time_end%100}} {{time_end>1200 ? "Am":"Pm" }}</div></div>
         <div class="item item-body" style="height: 125px;">

@@ -4,11 +4,58 @@
   The FriendsCtrl pulls data from the Friends service (service.js)
   The Friends service returns an array of friend data
 -->
-<ion-view view-title="{{chat.name}}">
+
+<ion-view view-title="Daily View">
   <ion-content class="padding">
-    <img ng-src="{{chat.face}}" style="width: 64px; height: 64px">
-    <p>
-      {{chat.lastText}}
-    </p>
+    <label class="item item-input">
+      <span class="input-label">Month </span>
+      <input type="month" id="month_picker" ng-change="month_changed()" ng-model="month_data">
+    </label>
+    <ion-list>
+      <div ng-show="working_data == undefined" style="display:flex;align-items:center;justify-content:center;height:80vh">
+        <p style="text-align:center;font-size:3em;padding-top:10px" >No Events in {{month}} {{year}}</p>
+      </div>
+      <div class="list card" ng-repeat="y in working_data track by $index" ng-show="y !=undefined">
+        <div class="item item-divider" style="background-color:#D1D1D1"><p>{{month}} {{y.date}}</p></div>
+        <div class="list card" ng-repeat="x in y.events track by $index" ng-hide="x.hide">
+            <div class="item item-divider" ng-class="{conflict:x.conflict != undefined}"><b>{{x.name}}</b> <div class="align-right">{{((x.time_start - (x.time_start%100))/100)>12 ? ((x.time_start - (x.time_start%100))/100)-12 : ((x.time_end - (x.time_end%100))/100)}}:{{x.time_start%100}} {{time_start>1200 ? "Am":"Pm" }} - {{((x.time_end - (x.time_end%100))/100)>12 ? ((x.time_end - (x.time_end%100))/100)-12 : ((x.time_end - (x.time_end%100))/100)}}:{{x.time_end%100}} {{time_end>1200 ? "Am":"Pm" }}</div></div>
+            <div class="item item-body" style="height: 125px;">
+              <div>
+                {{x.desc}} {{x.conflict}}
+              </div>
+            </div>
+          </div>
+        {{x}}
+      </div>
+    <!--  <div class="list card" ng-repeat="x in working_data track by $index" ng-hide="x.hide">
+        <div class="item item-divider" ng-class="{conflict:x.conflict != undefined}"><b>{{x.name}}</b> <div class="align-right">{{((x.time_start - (x.time_start%100))/100)>12 ? ((x.time_start - (x.time_start%100))/100)-12 : ((x.time_end - (x.time_end%100))/100)}}:{{x.time_start%100}} {{time_start>1200 ? "Am":"Pm" }} - {{((x.time_end - (x.time_end%100))/100)>12 ? ((x.time_end - (x.time_end%100))/100)-12 : ((x.time_end - (x.time_end%100))/100)}}:{{x.time_end%100}} {{time_end>1200 ? "Am":"Pm" }}</div></div>
+        <div class="item item-body" style="height: 125px;">
+          <div>
+            {{x.desc}} {{x.hide}}
+          </div>
+        </div>
+          <div class="item tabs tabs-secondary tabs-icon-left">
+            <div class="tab-item">
+              <i class="icon ion-thumbsup"></i>
+              Pin
+            </div>
+            <div class="tab-item" ng-click="hide_event($index)">
+              <i class="icon ion-share"></i>
+              Hide
+            </div>
+          </div>
+      </div>
+    -->
+
+
+    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
+      <img ng-src="{{chat.face}}">
+      <h2>{{chat.name}}</h2>
+      <p>{{chat.lastText}}</p>
+      <i class="icon ion-chevron-right icon-accessory"></i>
+    </ion-item>
+
+
+  </ion-list>
   </ion-content>
 </ion-view>
